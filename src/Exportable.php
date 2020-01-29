@@ -218,7 +218,7 @@ trait Exportable
      */
     private function transformRow($data)
     {
-        return new Collection($data)->map(function ($value) {
+        return (new Collection($data))->map(function ($value) {
             return is_int($value) || is_float($value) || is_null($value) ? (string) $value : $value;
         })->filter(function ($value) {
             return is_string($value);
