@@ -97,7 +97,7 @@ trait Exportable
         $has_sheets = ($writer instanceof \Box\Spout\Writer\XLSX\Writer || $writer instanceof \Box\Spout\Writer\ODS\Writer);
 
         // It can export one sheet (Collection) or N sheets (SheetCollection)
-        $data = $this->data instanceof SheetCollection ? $this->data : collect([$this->data]);
+        $data = $this->data instanceof SheetCollection ? $this->data : new Collection([$this->data]);
 
         foreach ($data as $key => $collection) {
             if ($collection instanceof Collection) {
@@ -112,7 +112,7 @@ trait Exportable
             if (is_string($key)) {
                 $writer->getCurrentSheet()->setName($key);
             }
-            if ($has_sheets && $data->keys()->last() !== $key) {
+            if ($has_sheets && $data->keys()[count($data->keys()) - 1] !== $key) {
                 $writer->addNewSheetAndMakeItCurrent();
             }
         }
@@ -159,7 +159,7 @@ trait Exportable
 
     private function writeRowsFromArray($writer, array $array, ?callable $callback = null)
     {
-        $collection = collect($array);
+        $collection = new Collection($array);
 
         if (is_object($collection->first()) || is_array($collection->first())) {
             // provided $array was valid and could be converted to a collection
